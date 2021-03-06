@@ -1,3 +1,8 @@
+/**
+ * @description 存储配置
+ * @author wulei
+ */
+
 const { isProd } = require('../utils/env')
 
 let REDIS_CONF = {
