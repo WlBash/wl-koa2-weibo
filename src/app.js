@@ -1,3 +1,4 @@
+const path = require('path')
 const Koa = require('koa')
 const app = new Koa()
 const views = require('koa-views')
@@ -8,10 +9,16 @@ const logger = require('koa-logger')
 const session = require('koa-generic-session')
 const redisStore = require('koa-redis')
 const { REDIS_CONF } = require('./conf/db')
-const index = require('./routes/index')
+const { SESSION_SECRET_KEY } = require('./conf/secretKeys')
+
+//const index = require('./routes/index')
 const userViewRouter = require('./routes/view/user')
 const userApiRouter = require('./routes/api/user')
+const blogViewRouter = require('./routes/view/blog')
+const homeAPIRouter = require('./routes/api/blog-home')
+const utilsAPIRouter = require('./routes/api/utils')
 const errorViewRouter = require('./routes/view/error')
+const koaStatic = require('koa-static')
 
 // error handler
 let onerrorConf = {}
@@ -26,14 +33,15 @@ app.use(bodyparser({
 }))
 app.use(json())
 app.use(logger())
-app.use(require('koa-static')(__dirname + '/public'))
+app.use(koaStatic(__dirname + '/public'))
+app.use(koaStatic(path.join(__dirname, '..', 'uploadFiles')))
 
 app.use(views(__dirname + '/views', {
     extension: 'ejs'
 }))
 
 //session配置
-app.keys = ['WL895$@']
+app.keys = [SESSION_SECRET_KEY]
 app.use(session({
     key: 'weibo.sid',
     prefix: 'weibo:sess:',
@@ -49,9 +57,12 @@ app.use(session({
 }))
 
 // routes
-app.use(index.routes(), index.allowedMethods())
+//app.use(index.routes(), index.allowedMethods())
 app.use(userViewRouter.routes(), userViewRouter.allowedMethods())
 app.use(userApiRouter.routes(), userApiRouter.allowedMethods())
+app.use(blogViewRouter.routes(), blogViewRouter.allowedMethods())
+app.use(homeAPIRouter.routes(), homeAPIRouter.allowedMethods())
+app.use(utilsAPIRouter.routes(), utilsAPIRouter.allowedMethods())
 app.use(errorViewRouter.routes(), errorViewRouter.allowedMethods())
 
 // error-handling

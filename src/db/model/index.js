@@ -8,6 +8,7 @@ const Blog = require('./Blog')
 const UserRelation = require('./UserRelation')
 const AtRelation = require('./AtRelation')
 
+//外键
 Blog.belongsTo(User, {
     foreignKey: 'userId'
 })

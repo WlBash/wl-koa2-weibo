@@ -1,6 +1,6 @@
 /**
  * @description 微博 @ 用户的关系，数据模型
- * @author 双越老师
+ * @author wulei
  */
 
 const seq = require('../seq')
