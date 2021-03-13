@@ -31,7 +31,6 @@ async function getAtRelationCount(userId) {
         }
     })
     return result.count
-    // result.rows
 }
 
 /**
